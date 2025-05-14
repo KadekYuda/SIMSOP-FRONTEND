@@ -24,6 +24,7 @@ import Categories from "./Categories";
 import CrudButton from "../../Button/CrudButton";
 import Pagination from "./Pagination";
 import api from "../../../service/api";
+import LoadingComponent from "../../LoadingComponent";
 
 const Product = () => {
   const navigate = useNavigate();
@@ -398,18 +399,17 @@ const Product = () => {
               Product Management
             </h1>
             <div className="flex items-center gap-2 px-4 py-2">
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => navigate("/batchstock")}
-                          className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 shadow-sm transition-all"
-                          title="Back to Products"
-                        >
-                          <ArrowRight className="h-5 w-5" />
-                          <span>Batch Stock</span>
-                        </button>
-
-                      </div>
-                    </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate("/batchstock")}
+                  className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 shadow-sm transition-all"
+                  title="Back to Products"
+                >
+                  <ArrowRight className="h-5 w-5" />
+                  <span>Batch Stock</span>
+                </button>
+              </div>
+            </div>
           </div>
           <div className="flex gap-2">
             <CrudButton
@@ -787,29 +787,29 @@ const Product = () => {
                       </div>
                     </div>
                     {isAdmin && (
-                    <div className="flex justify-end gap-3">
-                      <CrudButton
-                        icon={Edit2}
-                        onClick={() => {
-                          setFormData(prepareEditData(product));
-                          setModalMode("edit");
-                          setShowModal(true);
-                        }}
-                        buttonStyle="primary"
-                        buttonType="product"
-                        actionType="edit"
-                      />
-                      <CrudButton
-                        icon={Trash2}
-                        onConfirm={() => handleDelete(product.code_product)}
-                        buttonStyle="danger"
-                        buttonType="product"
-                        actionType="delete"
-                        confirmMessage="Are you sure you want to delete this product?"
-                        dataMessage="This action will permanently delete this product and cannot be undone."
-                        title="Delete Product"
-                      />
-                    </div>
+                      <div className="flex justify-end gap-3">
+                        <CrudButton
+                          icon={Edit2}
+                          onClick={() => {
+                            setFormData(prepareEditData(product));
+                            setModalMode("edit");
+                            setShowModal(true);
+                          }}
+                          buttonStyle="primary"
+                          buttonType="product"
+                          actionType="edit"
+                        />
+                        <CrudButton
+                          icon={Trash2}
+                          onConfirm={() => handleDelete(product.code_product)}
+                          buttonStyle="danger"
+                          buttonType="product"
+                          actionType="delete"
+                          confirmMessage="Are you sure you want to delete this product?"
+                          dataMessage="This action will permanently delete this product and cannot be undone."
+                          title="Delete Product"
+                        />
+                      </div>
                     )}
                   </div>
                 )}
@@ -903,10 +903,7 @@ const Product = () => {
                   }`}
                 >
                   {uploadLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Uploading...</span>
-                    </>
+                    <LoadingComponent />
                   ) : (
                     <>
                       <Upload className="h-4 w-4" />

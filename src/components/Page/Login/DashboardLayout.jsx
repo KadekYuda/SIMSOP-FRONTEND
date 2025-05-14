@@ -6,31 +6,30 @@ import Sidebars from "../Sidebar/staff/Sidebars";
 import Headers from "../Sidebar/Headers";
 import api from "../../../service/api";
 import MinStockAlert from "../../modal/MinStockAlert";
-
+import LoadingComponent from "../../LoadingComponent";
 
 const DashboardLayout = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(true);
-
 
   // Fetch user data dari server
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get('/users/verify-token', );
-        
+        const response = await api.get("/users/verify-token");
+
         if (response.data.user && response.data.user.role) {
           setRole(response.data.user.role);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
         // Redirect ke halaman login jika unauthorized
         if (error.response?.status === 401 || error.response?.status === 403) {
-        window.location.href = '/login';
-      }
+          window.location.href = "/login";
+        }
       } finally {
         setLoading(false);
       }
@@ -61,14 +60,13 @@ const DashboardLayout = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const SidebarComponent = role === "admin" ? SidebarAdmin : Sidebars;
-
   if (loading) {
-    return <div>Loading...</div>; // Tambahkan loading indicator
+    return <LoadingComponent />;
   }
 
   return (

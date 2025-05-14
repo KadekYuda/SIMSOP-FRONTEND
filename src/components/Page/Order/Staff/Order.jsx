@@ -20,6 +20,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../../service/api";
 import OrderDetails from "../OrderDetails";
+import OrderCharts from "../Admin/OrderCharts";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -999,6 +1000,7 @@ const Order = () => {
                         </svg>
                       </button>
                     </div>
+                    <OrderCharts />
                   </div>
                 </div>
               </motion.div>

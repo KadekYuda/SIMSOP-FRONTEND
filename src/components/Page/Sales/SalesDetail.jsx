@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../../service/api";
 import AlertModal from "../../modal/AlertModal";
+import LoadingComponent from "../../LoadingComponent";
 
 const SalesDetail = () => {
   const [sale, setSale] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -23,8 +25,14 @@ const SalesDetail = () => {
         error.response?.data?.msg || "Error fetching sale details"
       );
       setShowAlert(true);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   if (!sale) {
     return <div className="p-4">Loading...</div>;

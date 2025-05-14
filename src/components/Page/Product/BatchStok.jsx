@@ -15,6 +15,7 @@ import {
   Package2,
   FileText,
 } from "lucide-react";
+import LoadingComponent from "../../LoadingComponent";
 
 const BatchStok = () => {
   const navigate = useNavigate();
@@ -199,6 +200,10 @@ const BatchStok = () => {
       navigate("/order");
     }
   };
+
+  if (loading) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
