@@ -15,7 +15,6 @@ import {
   RefreshCw,
   DollarSign,
   Tag,
-
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../../service/api";
@@ -55,7 +54,7 @@ const statusOptions = [
 
 const OrderAdmin = () => {
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [alert, setAlert] = useState(null);
   const [deleteOrderId, setDeleteOrderId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -101,6 +100,7 @@ const OrderAdmin = () => {
   });
 
   const checkUserRole = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await api.get("/users/profile");
       const userRole = response.data.user?.role;
@@ -115,6 +115,8 @@ const OrderAdmin = () => {
     } catch (error) {
       console.error("Error checking user role:", error);
       setIsAdmin(false);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -739,7 +741,7 @@ const OrderAdmin = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-gray-50 min-h-screen">
+          <div className="bg-gray-50 ">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
               {/* Order Management Card Header */}
               <div className="bg-indigo-600 rounded-t-lg shadow-md p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">

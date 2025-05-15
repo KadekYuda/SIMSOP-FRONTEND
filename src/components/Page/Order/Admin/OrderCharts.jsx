@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Pie, Line, Bar } from "react-chartjs-2";
 import {
-
   Clock,
   Check,
   DollarSign,
@@ -155,25 +154,26 @@ const OrderCharts = ({ orderStats }) => {
     // Generate month labels first
     for (let i = numMonths - 1; i >= 0; i--) {
       const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      labels.push(month.toLocaleString('default', { month: 'short' }));
+      labels.push(month.toLocaleString("default", { month: "short" }));
     }
 
     // Use the monthly stats from orderStats if available
     if (orderStats?.monthlyStats && orderStats.monthlyStats.length > 0) {
-      orderStats.monthlyStats.forEach(stat => {
+      orderStats.monthlyStats.forEach((stat) => {
         const date = new Date(stat.date);
-        const monthLabel = date.toLocaleString('default', { month: 'short' });
+        const monthLabel = date.toLocaleString("default", { month: "short" });
         const monthIndex = labels.indexOf(monthLabel);
-        
+
         if (monthIndex >= 0) {
           countData[monthIndex] = stat.count || 0;
-          
+
           // Estimate value based on total value proportion if not provided
           if (stat.value !== undefined) {
             valueData[monthIndex] = stat.value;
           } else if (orderStats.totalValue && orderStats.totalOrders > 0) {
             // Estimate value based on count proportion
-            valueData[monthIndex] = (stat.count / orderStats.totalOrders) * orderStats.totalValue;
+            valueData[monthIndex] =
+              (stat.count / orderStats.totalOrders) * orderStats.totalValue;
           }
         }
       });
@@ -214,32 +214,40 @@ const OrderCharts = ({ orderStats }) => {
 
   // Calculate values for each status based on proportions
   const calculateStatusValues = useMemo(() => {
-    const totalCount = 
+    const totalCount =
       (orderStats?.pendingOrders || 0) +
       (orderStats?.approvedOrders || 0) +
       (orderStats?.receivedOrders || 0) +
       (orderStats?.cancelledOrders || 0);
-    
+
     const totalValue = orderStats?.totalValue || 0;
-    
+
     // Calculate proportional values based on order counts
-    const pendingValue = totalCount > 0 ? 
-      (orderStats?.pendingOrders || 0) / totalCount * totalValue : 0;
-    
-    const approvedValue = totalCount > 0 ? 
-      (orderStats?.approvedOrders || 0) / totalCount * totalValue : 0;
-    
-    const receivedValue = totalCount > 0 ? 
-      (orderStats?.receivedOrders || 0) / totalCount * totalValue : 0;
-    
-    const cancelledValue = totalCount > 0 ? 
-      (orderStats?.cancelledOrders || 0) / totalCount * totalValue : 0;
-    
+    const pendingValue =
+      totalCount > 0
+        ? ((orderStats?.pendingOrders || 0) / totalCount) * totalValue
+        : 0;
+
+    const approvedValue =
+      totalCount > 0
+        ? ((orderStats?.approvedOrders || 0) / totalCount) * totalValue
+        : 0;
+
+    const receivedValue =
+      totalCount > 0
+        ? ((orderStats?.receivedOrders || 0) / totalCount) * totalValue
+        : 0;
+
+    const cancelledValue =
+      totalCount > 0
+        ? ((orderStats?.cancelledOrders || 0) / totalCount) * totalValue
+        : 0;
+
     return {
       pendingValue,
       approvedValue,
       receivedValue,
-      cancelledValue
+      cancelledValue,
     };
   }, [orderStats]);
 
@@ -517,7 +525,9 @@ const OrderCharts = ({ orderStats }) => {
             {percentage}% of total
           </span>
           <span className="text-xs font-medium text-emerald-600">
-            {value !== undefined && value !== null ? formatCurrency(value) : "Rp 0"}
+            {value !== undefined && value !== null
+              ? formatCurrency(value)
+              : "Rp 0"}
           </span>
         </div>
       </div>
@@ -630,10 +640,10 @@ const OrderCharts = ({ orderStats }) => {
           // Ensure values are valid numbers
           const countValue = pieChartData.count.datasets[0].data[index] || 0;
           const valueAmount = pieChartData.value.datasets[0].data[index] || 0;
-          
+
           // Calculate percentage based on count
           const percentageValue = getPercentage(countValue);
-          
+
           return (
             <StatusCard
               key={label}
@@ -733,16 +743,18 @@ const OrderCharts = ({ orderStats }) => {
               </div>
             </div>
           </div>
-          <div className="h-[250px] sm:h-[280px] md:h-[300px]">
+          <div className="h-[250px] sm:h-[280px] md:h-[300px] w-full min-w-0 flex items-center justify-center overflow-x-auto">
             {chartType === "line" ? (
               <Line
                 data={timeSeriesData[activeTab]}
                 options={timeSeriesOptions}
+                style={{ width: "100%", height: "100%", minHeight: 220 }}
               />
             ) : (
               <Bar
                 data={timeSeriesData[activeTab]}
                 options={timeSeriesOptions}
+                style={{ width: "100%", height: "100%", minHeight: 220 }}
               />
             )}
           </div>
@@ -782,9 +794,13 @@ const OrderCharts = ({ orderStats }) => {
               </button>
             </div>
           </div>
-          <div className="h-[300px] flex items-center justify-center relative">
-            <Pie data={pieChartData[activeTab]} options={pieChartOptions} />
-            <div className="absolute text-center">
+          <div className="h-[300px] w-full min-w-0 flex items-center justify-center relative overflow-x-auto">
+            <Pie
+              data={pieChartData[activeTab]}
+              options={pieChartOptions}
+              style={{ width: "100%", height: "100%", minHeight: 220 }}
+            />
+            <div className="absolute text-center left-0 right-0 mx-auto">
               <span className="block text-2xl font-bold text-gray-900">
                 {activeTab === "count"
                   ? totals.count
