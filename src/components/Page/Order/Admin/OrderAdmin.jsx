@@ -122,7 +122,6 @@ const OrderAdmin = () => {
 
   const checkUserRole = useCallback(async () => {
     try {
-      setIsLoading(true); // Set loading at start of role check
       const response = await api.get("/users/profile");
       const userRole = response.data.user?.role;
       setIsAdmin(userRole === "admin");
@@ -137,7 +136,7 @@ const OrderAdmin = () => {
       console.error("Error checking user role:", error);
       setIsAdmin(false);
     } finally {
-      setIsLoading(false); // Only stop loading after role check completes
+      setIsLoading(false);
     }
   }, []);
 
@@ -740,28 +739,8 @@ const OrderAdmin = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         {isLoading ? (
           <LoadingComponent />
-        ) : !isAdmin ? (
-          <div className="flex items-center justify-center h-screen bg-gray-50">
-            <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
-              <div className="mb-4 text-red-500">
-                <AlertTriangle size={48} className="mx-auto" />
-              </div>
-              <h1 className="text-2xl font-bold text-red-600 mb-4">
-                Access Denied
-              </h1>
-              <p className="text-gray-600 mb-6">
-                You do not have permission to access this page.
-              </p>
-              <a
-                href="/dashboard"
-                className="inline-block bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600 transition-colors"
-              >
-                Go to Dashboard
-              </a>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-gray-50 ">
+        ) : isAdmin ? (
+          <div className="bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
               {/* Order Management Card Header */}
               <div className="bg-indigo-600 rounded-t-lg shadow-md p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -1809,6 +1788,26 @@ const OrderAdmin = () => {
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-screen bg-gray-50">
+            <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
+              <div className="mb-4 text-red-500">
+                <AlertTriangle size={48} className="mx-auto" />
+              </div>
+              <h1 className="text-2xl font-bold text-red-600 mb-4">
+                Access Denied
+              </h1>
+              <p className="text-gray-600 mb-6">
+                You do not have permission to access this page.
+              </p>
+              <a
+                href="/dashboard"
+                className="inline-block bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600 transition-colors"
+              >
+                Go to Dashboard
+              </a>
+            </div>
           </div>
         )}
 
