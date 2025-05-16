@@ -1,31 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingBag, Package, TrendingUp, Users } from "lucide-react";
 import api from "../../../../service/api";
-import LoadingComponent from "../../../LoadingComponent";
+
 
 const DashboardStaff = () => {
   const [orders, setOrders] = useState([]);
-  const [user, setUser] = useState(null); // Simpan data user
-  const [loading, setLoading] = useState(true); // State untuk loading
+
 
   useEffect(() => {
-    fetchUserProfile(); // Ambil data user
-    fetchOrderData(); // Ambil data order
+    fetchOrderData(); 
   }, []);
-
-  const fetchUserProfile = async () => {
-    try {
-      const response = await api.get("/users/profile");
-      setUser(response.data);
-    } catch (error) {
-      console.error(
-        "Error fetching user profile:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      setLoading(false); // Set loading ke false setelah data diambil
-    }
-  };
 
   const fetchOrderData = async () => {
     try {
@@ -57,7 +41,7 @@ const DashboardStaff = () => {
         {/* Page Header */}
         <div className="bg-white shadow-md rounded-xl p-6 mb-8">
           <h2 className="text-3xl font-bold mb-2 text-gray-800">
-            Welcome, {loading ? <LoadingComponent /> : user?.name}!
+            Welcome, 
           </h2>
           <p className="text-gray-500">
             Your personal stock and order management dashboard
