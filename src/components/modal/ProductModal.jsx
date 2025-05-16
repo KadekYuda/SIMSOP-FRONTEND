@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { X, Check, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
+import LoadingComponent from "../LoadingComponent";
 
 const ProductModal = ({
   isOpen,
@@ -52,7 +53,7 @@ const ProductModal = ({
       setIsFormEdited(false);
 
       // Prevent body scrolling when modal is open
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
       setFormData({
         code_product: "",
@@ -68,12 +69,12 @@ const ProductModal = ({
       setIsFormEdited(false);
 
       // Allow body scrolling when modal is closed
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
 
     return () => {
       // Cleanup - restore scrolling
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [
     isOpen,
@@ -261,7 +262,7 @@ const ProductModal = ({
 
   return createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 md:p-4">
-      <div 
+      <div
         ref={modalRef}
         className="bg-white rounded-lg max-w-2xl w-full shadow-xl transform transition-all animate-fadeIn flex flex-col max-h-screen md:max-h-[90vh] my-0 md:my-auto"
       >
@@ -344,10 +345,7 @@ const ProductModal = ({
                   }`}
                 >
                   {uploadLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                      <span>Uploading...</span>
-                    </>
+                    <LoadingComponent />
                   ) : (
                     <>
                       <Upload size={16} />
@@ -442,9 +440,13 @@ const ProductModal = ({
                   </label>
                   <div
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg flex justify-between items-center cursor-pointer hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
+                    onClick={() =>
+                      setCategoryDropdownOpen(!categoryDropdownOpen)
+                    }
                   >
-                    <span className={formData.category_name ? "" : "text-gray-400"}>
+                    <span
+                      className={formData.category_name ? "" : "text-gray-400"}
+                    >
                       {formData.category_name || "Select category (optional)"}
                     </span>
                     <ChevronRight
@@ -569,7 +571,7 @@ const ProductModal = ({
                   )}
                 </div>
               </div>
-              
+
               {/* Footer - Fixed at bottom */}
               <div className="mt-6 flex justify-end gap-3">
                 <button

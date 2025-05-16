@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
-import { 
-  FaFileImport, 
-  FaDownload, 
-  FaPlus, 
-  FaTrash, 
-  FaSpinner, 
-  FaEye, 
-  FaCalendarAlt, 
+import {
+  FaFileImport,
+  FaDownload,
+  FaPlus,
+  FaTrash,
+  FaSpinner,
+  FaEye,
+  FaCalendarAlt,
   FaBox,
   FaCoins,
   FaTags,
   FaClipboardList,
-  FaCheck
+  FaCheck,
 } from "react-icons/fa";
 import AlertModal from "../../modal/AlertModal";
 import SuccessModal from "../../modal/SuccessModal";
 import api from "../../../service/api";
+import LoadingComponent from "../../LoadingComponent";
 
 const Sales = () => {
   const [sales, setSales] = useState([]);
@@ -81,7 +82,7 @@ const Sales = () => {
       const batches = response.data.result || [];
       const batchesWithTotalStock = batches.map((batch) => ({
         ...batch,
-        totalStock: (batch.stock_quantity || 0),
+        totalStock: batch.stock_quantity || 0,
       }));
 
       handleItemChange(index, "available_batches", batchesWithTotalStock);
@@ -279,18 +280,21 @@ const Sales = () => {
     <div className="min-h-screen bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Sales Management</h1>
-            <p className="mt-1 text-sm text-gray-500">Create, import, and manage sales transactions</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Sales Management
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Create, import, and manage sales transactions
+            </p>
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => setActiveTab("manual")}
               className={`px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium ${
-                activeTab === "manual" 
-                ? "bg-blue-600 text-white shadow-md" 
-                : "bg-white text-gray-700 border border-gray-300"
+                activeTab === "manual"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-700 border border-gray-300"
               }`}
             >
               <FaClipboardList />
@@ -299,9 +303,9 @@ const Sales = () => {
             <button
               onClick={() => setActiveTab("import")}
               className={`px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium ${
-                activeTab === "import" 
-                ? "bg-blue-600 text-white shadow-md" 
-                : "bg-white text-gray-700 border border-gray-300"
+                activeTab === "import"
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-white text-gray-700 border border-gray-300"
               }`}
             >
               <FaFileImport />
@@ -320,21 +324,27 @@ const Sales = () => {
                   <FaFileImport className="text-blue-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">Import Sales from CSV</h2>
-                  <p className="text-sm text-gray-500">Upload POS data or use our template</p>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Import Sales from CSV
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Upload POS data or use our template
+                  </p>
                 </div>
               </div>
-              
+
               <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Instructions</h3>
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">
+                    Instructions
+                  </h3>
                   <ol className="list-decimal list-inside text-sm text-gray-600 space-y-1">
                     <li>Download our template or prepare your POS export</li>
                     <li>Ensure your CSV has the required headers</li>
                     <li>Upload the file using the button below</li>
                   </ol>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <button
                     onClick={downloadTemplate}
@@ -356,7 +366,7 @@ const Sales = () => {
                     />
                   </label>
                 </div>
-                
+
                 {csvFile && (
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -364,8 +374,12 @@ const Sales = () => {
                         <FaFileImport className="text-blue-600 text-sm" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-700">{csvFile.name}</p>
-                        <p className="text-xs text-gray-500">{Math.round(csvFile.size / 1024)} KB</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          {csvFile.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {Math.round(csvFile.size / 1024)} KB
+                        </p>
                       </div>
                     </div>
                     <button
@@ -377,11 +391,13 @@ const Sales = () => {
                     </button>
                   </div>
                 )}
-                
+
                 {isLoading && (
                   <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-100 flex items-center gap-2">
                     <FaSpinner className="animate-spin text-yellow-600" />
-                    <span className="text-sm text-yellow-700">Processing your file, please wait...</span>
+                    <span className="text-sm text-yellow-700">
+                      Processing your file, please wait...
+                    </span>
                   </div>
                 )}
               </div>
@@ -396,16 +412,23 @@ const Sales = () => {
                   <FaClipboardList className="text-blue-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">Manual Sales Entry</h2>
-                  <p className="text-sm text-gray-500">Create a new sale transaction</p>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Manual Sales Entry
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Create a new sale transaction
+                  </p>
                 </div>
               </div>
-              
+
               <form onSubmit={handleManualSubmit}>
                 <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-2 mb-3">
                     <FaCalendarAlt className="text-gray-500" />
-                    <label htmlFor="saleDate" className="text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="saleDate"
+                      className="text-sm font-medium text-gray-700"
+                    >
                       Sale Date
                     </label>
                   </div>
@@ -427,7 +450,9 @@ const Sales = () => {
 
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">Sale Items</h3>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">
+                      Sale Items
+                    </h3>
                     <button
                       type="button"
                       onClick={handleAddItem}
@@ -450,9 +475,11 @@ const Sales = () => {
                         <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
                           <FaBox className="text-blue-600 text-sm" />
                         </div>
-                        <h4 className="text-md font-medium text-gray-800">Item #{index + 1}</h4>
+                        <h4 className="text-md font-medium text-gray-800">
+                          Item #{index + 1}
+                        </h4>
                       </div>
-                      
+
                       {index > 0 && (
                         <button
                           type="button"
@@ -465,7 +492,7 @@ const Sales = () => {
                         </button>
                       )}
                     </div>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                       <div>
                         <label
@@ -478,7 +505,9 @@ const Sales = () => {
                         <select
                           id={`product-${index}`}
                           value={item.code_product}
-                          onChange={(e) => handleProductSelect(index, e.target.value)}
+                          onChange={(e) =>
+                            handleProductSelect(index, e.target.value)
+                          }
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                           required
                           aria-required="true"
@@ -530,7 +559,11 @@ const Sales = () => {
                           type="number"
                           value={item.selling_price}
                           onChange={(e) =>
-                            handleItemChange(index, "selling_price", e.target.value)
+                            handleItemChange(
+                              index,
+                              "selling_price",
+                              e.target.value
+                            )
                           }
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                           min="0"
@@ -593,7 +626,10 @@ const Sales = () => {
                                   Stock: {batch.totalStock || 0}
                                 </div>
                                 <div className="text-xs text-gray-600">
-                                  Expires: {new Date(batch.exp_date).toLocaleDateString()}
+                                  Expires:{" "}
+                                  {new Date(
+                                    batch.exp_date
+                                  ).toLocaleDateString()}
                                 </div>
                               </div>
                             </div>
@@ -610,10 +646,13 @@ const Sales = () => {
                     <span className="text-blue-700">
                       {manualSale.items
                         .reduce((sum, item) => sum + (item.subtotal || 0), 0)
-                        .toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
+                        .toLocaleString("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                        })}
                     </span>
                   </div>
-                  
+
                   <div className="flex gap-3">
                     <button
                       type="button"
@@ -656,16 +695,17 @@ const Sales = () => {
               <FaClipboardList className="text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">Recent Sales</h2>
-              <p className="text-sm text-gray-500">View and manage your sales transactions</p>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Recent Sales
+              </h2>
+              <p className="text-sm text-gray-500">
+                View and manage your sales transactions
+              </p>
             </div>
           </div>
-          
+
           {isLoading ? (
-            <div className="flex justify-center items-center py-12">
-              <FaSpinner className="animate-spin text-blue-600 text-2xl" />
-              <span className="ml-2 text-gray-600">Loading sales data...</span>
-            </div>
+            <LoadingComponent />
           ) : (
             <div className="overflow-x-auto rounded-lg border border-gray-200">
               <table className="min-w-full divide-y divide-gray-200">
@@ -688,11 +728,16 @@ const Sales = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {sales.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
+                      <td
+                        colSpan="4"
+                        className="px-6 py-12 text-center text-gray-500"
+                      >
                         <div className="flex flex-col items-center">
                           <FaClipboardList className="text-gray-300 text-4xl mb-3" />
                           <p className="text-lg font-medium">No sales found</p>
-                          <p className="text-sm">Create a new sale or import from CSV</p>
+                          <p className="text-sm">
+                            Create a new sale or import from CSV
+                          </p>
                         </div>
                       </td>
                     </tr>
@@ -713,7 +758,9 @@ const Sales = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <button
-                            onClick={() => navigate(`/salesdetail/${sale.sales_id}`)}
+                            onClick={() =>
+                              navigate(`/salesdetail/${sale.sales_id}`)
+                            }
                             className="flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
                             aria-label="View sale details"
                           >

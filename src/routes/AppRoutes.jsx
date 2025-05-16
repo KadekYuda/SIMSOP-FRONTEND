@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import LoadingComponent from "../components/LoadingComponent";
 
 import Login from "../components/Page/Login/Login";
 import DashboardAdmin from "../components/Page/Sidebar/admin/DashboardAdmin";
@@ -57,7 +58,7 @@ function AppRoutes() {
   // Protected Route component
   const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     if (loading) {
-      return <div>Loading...</div>;
+      return <LoadingComponent />;
     }
 
     if (!isAuthenticated()) {
@@ -79,7 +80,7 @@ function AppRoutes() {
   // Public Route component (accessible only when not authenticated)
   const PublicRoute = ({ children }) => {
     if (loading) {
-      return <div>Loading...</div>;
+      return <LoadingComponent />;
     }
 
     if (isAuthenticated()) {

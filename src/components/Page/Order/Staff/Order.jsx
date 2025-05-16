@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../../service/api";
 import OrderDetails from "../OrderDetails";
 import OrderCharts from "../Admin/OrderCharts";
+import LoadingComponent from "../../../../components/LoadingComponent";
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
@@ -422,12 +423,7 @@ const Order = () => {
   return (
     <>
       {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <p className="text-gray-600">Loading...</p>
-          </div>
-        </div>
+        <LoadingComponent />
       ) : !isStaff ? (
         <div className="flex items-center justify-center h-screen bg-gray-50">
           <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">

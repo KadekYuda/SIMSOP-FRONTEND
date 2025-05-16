@@ -35,7 +35,7 @@ const SalesDetail = () => {
   }
 
   if (!sale) {
-    return <div className="p-4">Loading...</div>;
+    return <LoadingComponent />;
   }
 
   return (

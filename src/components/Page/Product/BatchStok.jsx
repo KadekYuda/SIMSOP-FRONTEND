@@ -901,10 +901,7 @@ const BatchStok = () => {
           {/* Mobile View */}
           <div className="md:hidden space-y-3">
             {loading ? (
-              <div className="bg-white p-6 rounded-xl shadow-lg flex justify-center items-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-4 border-t-transparent border-blue-500"></div>
-                <span className="ml-3 text-gray-600">Loading...</span>
-              </div>
+              <LoadingComponent />
             ) : batchStok.length === 0 ? (
               <div className="bg-white p-6 rounded-xl shadow-lg text-center text-gray-500">
                 No batch stock found

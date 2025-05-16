@@ -473,10 +473,7 @@ const Product = () => {
         {/* Product List */}
         <div className="space-y-3">
           {loading ? (
-            <div className="flex justify-center items-center py-8">
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-t-transparent border-indigo-600"></div>
-              <span className="ml-2 text-gray-600">Loading...</span>
-            </div>
+            <LoadingComponent />
           ) : products.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               No products found
@@ -599,29 +596,27 @@ const Product = () => {
 
                     {isAdmin && (
                       <div className="flex flex-row justify-end gap-2 mt-3">
-                         <CrudButton
-                              icon={Edit2}
-                              onClick={() => {
-                                setFormData(prepareEditData(product));
-                                setModalMode("edit");
-                                setShowModal(true);
-                              }}
-                              buttonStyle="primary"
-                              buttonType="product"
-                              actionType="edit"
-                            />
-                            <CrudButton
-                              icon={Trash2}
-                              onConfirm={() =>
-                                handleDelete(product.code_product)
-                              }
-                              buttonStyle="danger"
-                              buttonType="product"
-                              actionType="delete"
-                              confirmMessage="Are you sure you want to delete this product?"
-                              dataMessage="This action will permanently delete this product and cannot be undone."
-                              title="Delete Product"
-                            />
+                        <CrudButton
+                          icon={Edit2}
+                          onClick={() => {
+                            setFormData(prepareEditData(product));
+                            setModalMode("edit");
+                            setShowModal(true);
+                          }}
+                          buttonStyle="primary"
+                          buttonType="product"
+                          actionType="edit"
+                        />
+                        <CrudButton
+                          icon={Trash2}
+                          onConfirm={() => handleDelete(product.code_product)}
+                          buttonStyle="danger"
+                          buttonType="product"
+                          actionType="delete"
+                          confirmMessage="Are you sure you want to delete this product?"
+                          dataMessage="This action will permanently delete this product and cannot be undone."
+                          title="Delete Product"
+                        />
                       </div>
                     )}
                   </div>
@@ -767,10 +762,7 @@ const Product = () => {
                     return (
                       <tr>
                         <td colSpan="8" className="px-4 py-4 text-center">
-                          <div className="flex justify-center items-center space-x-2">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-                            <span>Loading...</span>
-                          </div>
+                          <LoadingComponent />
                         </td>
                       </tr>
                     );

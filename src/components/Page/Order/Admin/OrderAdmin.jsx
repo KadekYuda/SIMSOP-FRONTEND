@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../../service/api";
 import CrudButton from "../../../Button/CrudButton.jsx";
 import OrderDetails from "../OrderDetails";
+import LoadingComponent from "../../../../components/LoadingComponent";
 
 import {
   Chart as ChartJS,
@@ -102,22 +103,22 @@ const OrderAdmin = () => {
   const [processingOrderId, setProcessingOrderId] = useState(null);
   const [expDateInputs, setExpDateInputs] = useState({});
 
-   const fetchUserProfile = useCallback(async () => {
-      try {
-        const response = await api.get("/users/profile");
-        setOrderForm((prev) => ({
-          ...prev,
-          user_id: response.data.user?.user_id,
-        }));
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        showAlert(
-          "error",
-          "Failed to fetch user profile",
-          error.response?.data?.msg || "Network error"
-        );
-      }
-    }, []);
+  const fetchUserProfile = useCallback(async () => {
+    try {
+      const response = await api.get("/users/profile");
+      setOrderForm((prev) => ({
+        ...prev,
+        user_id: response.data.user?.user_id,
+      }));
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      showAlert(
+        "error",
+        "Failed to fetch user profile",
+        error.response?.data?.msg || "Network error"
+      );
+    }
+  }, []);
 
   const checkUserRole = useCallback(async () => {
     try {
@@ -128,7 +129,7 @@ const OrderAdmin = () => {
       if (userRole !== "admin") {
         showAlert(
           "error",
-          "Access Denied", 
+          "Access Denied",
           "You do not have permission to access this page"
         );
       }
@@ -145,8 +146,8 @@ const OrderAdmin = () => {
   }, [checkUserRole]);
 
   useEffect(() => {
-      fetchUserProfile();
-    }, [fetchUserProfile]);
+    fetchUserProfile();
+  }, [fetchUserProfile]);
 
   const fetchOrders = useCallback(async () => {
     setIsLoading(true);
@@ -738,12 +739,7 @@ const OrderAdmin = () => {
     <div className="min-h-screen bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         {isLoading ? (
-          <div className="flex items-center justify-center h-screen">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-              <p className="text-gray-600">Loading...</p>
-            </div>
-          </div>
+          <LoadingComponent />
         ) : !isAdmin ? (
           <div className="flex items-center justify-center h-screen bg-gray-50">
             <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto">
@@ -781,16 +777,15 @@ const OrderAdmin = () => {
                   </div>
                 </div>
                 <CrudButton
-                icon={Plus}
+                  icon={Plus}
                   onClick={() => {
                     fetchProducts();
                     setShowCreateOrderModal(true);
                   }}
-                   label="Create Order"
-                   buttonStyle="secondary"
+                  label="Create Order"
+                  buttonStyle="secondary"
                   className="flex items-center  text-indigo-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
                 />
-                 
               </div>
               <div className="flex flex-col lg:flex-row gap-6">
                 <div className="w-full">
