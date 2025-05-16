@@ -53,7 +53,7 @@ const CrudButton = ({
         }
         ${
           buttonStyle === "secondary"
-            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+            ? "flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
             : ""
         }
         ${
@@ -68,7 +68,8 @@ const CrudButton = ({
           }
         ${
           buttonStyle === "secondary"
-            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+            ? "flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
+      
             : ""
         }
         ${

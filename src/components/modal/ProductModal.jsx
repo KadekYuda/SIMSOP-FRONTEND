@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { X, Check, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import PropTypes from "prop-types";
+import { createPortal } from "react-dom";
 
 const ProductModal = ({
   isOpen,
@@ -200,22 +201,20 @@ const ProductModal = ({
 
     const processedData = {
       ...formData,
-      sell_price: Number(formData.sell_price.replace(/,/g, "") || 0),
-      min_stock: Number(formData.min_stock || 0),
+      sell_price: Number(formData.sell_price),
+      min_stock: Number(formData.min_stock),
     };
 
-    console.log("Submitted sell_price:", processedData.sell_price);
-    onSubmit(processedData);
+    onSubmit(processedData, modalMode);
   };
 
   const handleCategorySelect = (category) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       code_categories: category.code_categories,
       category_name: category.name_categories,
-    });
+    }));
     setCategoryDropdownOpen(false);
-    setCategorySearch("");
     setIsFormEdited(true);
   };
 
@@ -225,28 +224,29 @@ const ProductModal = ({
     );
   }, [categories, categorySearch]);
 
-  const handleCsvUpload = async (e) => {
+  const handleCsvUpload = (e) => {
     e.preventDefault();
     if (!csvFile) return;
 
     setUploadLoading(true);
-    const processedData = {
-      file: csvFile,
-      type: "csv",
-    };
+    const formData = new FormData();
+    formData.append("file", csvFile);
 
-    try {
-      await onSubmit(processedData);
-      setCsvFile(null);
-    } catch (error) {
-      console.error("Error uploading CSV:", error);
-    } finally {
-      setUploadLoading(false);
-    }
+    // Call the onSubmit with the FormData and a special mode
+    onSubmit(formData, "csv")
+      .then(() => {
+        setUploadLoading(false);
+        setCsvFile(null);
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error uploading CSV:", error);
+        setUploadLoading(false);
+      });
   };
 
   const handleFileChange = (e) => {
-    if (e.target.files?.length) {
+    if (e.target.files && e.target.files.length > 0) {
       setCsvFile(e.target.files[0]);
     }
   };
@@ -259,7 +259,7 @@ const ProductModal = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 md:p-4">
       <div 
         ref={modalRef}
@@ -351,7 +351,7 @@ const ProductModal = ({
                   ) : (
                     <>
                       <Upload size={16} />
-                      <span>Upload CSV</span>
+                      <span>Upload</span>
                     </>
                   )}
                 </button>
@@ -373,13 +373,13 @@ const ProductModal = ({
                     type="text"
                     value={formData.code_product}
                     onChange={handleInputChange}
-                    disabled={modalMode === "edit"}
                     className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                       formErrors.code_product
                         ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                         : "border-gray-300"
                     }`}
                     placeholder="Enter product code"
+                    disabled={modalMode === "edit"}
                   />
                   {formErrors.code_product && (
                     <p className="mt-1 text-xs text-red-500">
@@ -401,7 +401,7 @@ const ProductModal = ({
                     type="text"
                     value={formData.barcode}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Enter barcode (optional)"
                   />
                 </div>
@@ -438,29 +438,25 @@ const ProductModal = ({
                     htmlFor="categories"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Categories
+                    Category
                   </label>
-                  <button
-                    type="button"
+                  <div
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg flex justify-between items-center cursor-pointer hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
-                    className="w-full flex justify-between items-center px-4 py-2 border border-gray-300 rounded-lg text-left hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   >
-                    <span
-                      className={
-                        formData.code_categories
-                          ? "text-gray-900"
-                          : "text-gray-500"
-                      }
-                    >
-                      {formData.category_name || formData.code_categories
-                        ? formData.category_name
-                        : "Select category"}
+                    <span className={formData.category_name ? "" : "text-gray-400"}>
+                      {formData.category_name || "Select category (optional)"}
                     </span>
-                    <span className="text-gray-400">▼</span>
-                  </button>
+                    <ChevronRight
+                      size={16}
+                      className={`transform transition-transform ${
+                        categoryDropdownOpen ? "rotate-90" : ""
+                      }`}
+                    />
+                  </div>
 
                   {categoryDropdownOpen && (
-                    <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-48 flex flex-col">
+                    <div className="absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg flex flex-col">
                       <div className="p-2 border-b border-gray-200 sticky top-0 bg-white z-10">
                         <div className="relative">
                           <input
@@ -594,7 +590,8 @@ const ProductModal = ({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

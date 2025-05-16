@@ -743,18 +743,16 @@ const OrderCharts = ({ orderStats }) => {
               </div>
             </div>
           </div>
-          <div className="h-[250px] sm:h-[280px] md:h-[300px] w-full min-w-0 flex items-center justify-center overflow-x-auto">
+          <div className="h-[250px] sm:h-[280px] md:h-[300px]">
             {chartType === "line" ? (
               <Line
                 data={timeSeriesData[activeTab]}
                 options={timeSeriesOptions}
-                style={{ width: "100%", height: "100%", minHeight: 220 }}
               />
             ) : (
               <Bar
                 data={timeSeriesData[activeTab]}
                 options={timeSeriesOptions}
-                style={{ width: "100%", height: "100%", minHeight: 220 }}
               />
             )}
           </div>
@@ -794,13 +792,9 @@ const OrderCharts = ({ orderStats }) => {
               </button>
             </div>
           </div>
-          <div className="h-[300px] w-full min-w-0 flex items-center justify-center relative overflow-x-auto">
-            <Pie
-              data={pieChartData[activeTab]}
-              options={pieChartOptions}
-              style={{ width: "100%", height: "100%", minHeight: 220 }}
-            />
-            <div className="absolute text-center left-0 right-0 mx-auto">
+          <div className="h-[300px] flex items-center justify-center relative">
+            <Pie data={pieChartData[activeTab]} options={pieChartOptions} />
+            <div className="absolute text-center">
               <span className="block text-2xl font-bold text-gray-900">
                 {activeTab === "count"
                   ? totals.count

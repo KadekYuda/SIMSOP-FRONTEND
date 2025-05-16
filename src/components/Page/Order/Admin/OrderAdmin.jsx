@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../../service/api";
+import CrudButton from "../../../Button/CrudButton.jsx";
 import OrderDetails from "../OrderDetails";
 
 import {
@@ -53,6 +54,17 @@ const statusOptions = [
 ];
 
 const OrderAdmin = () => {
+  // State declarations
+  const [orderStats, setOrderStats] = useState({
+    totalOrders: 0,
+    pendingOrders: 0,
+    approvedOrders: 0,
+    receivedOrders: 0,
+    cancelledOrders: 0,
+    totalValue: 0,
+    monthlyStats: [],
+  });
+
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [alert, setAlert] = useState(null);
@@ -89,26 +101,34 @@ const OrderAdmin = () => {
   const [showExpDateModal, setShowExpDateModal] = useState(false);
   const [processingOrderId, setProcessingOrderId] = useState(null);
   const [expDateInputs, setExpDateInputs] = useState({});
-  const [orderStats, setOrderStats] = useState({
-    totalOrders: 0,
-    pendingOrders: 0,
-    approvedOrders: 0,
-    receivedOrders: 0,
-    cancelledOrders: 0,
-    totalValue: 0,
-    monthlyStats: [],
-  });
+
+   const fetchUserProfile = useCallback(async () => {
+      try {
+        const response = await api.get("/users/profile");
+        setOrderForm((prev) => ({
+          ...prev,
+          user_id: response.data.user?.user_id,
+        }));
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        showAlert(
+          "error",
+          "Failed to fetch user profile",
+          error.response?.data?.msg || "Network error"
+        );
+      }
+    }, []);
 
   const checkUserRole = useCallback(async () => {
-    setIsLoading(true);
     try {
+      setIsLoading(true); // Set loading at start of role check
       const response = await api.get("/users/profile");
       const userRole = response.data.user?.role;
       setIsAdmin(userRole === "admin");
       if (userRole !== "admin") {
         showAlert(
           "error",
-          "Access Denied",
+          "Access Denied", 
           "You do not have permission to access this page"
         );
       }
@@ -116,13 +136,17 @@ const OrderAdmin = () => {
       console.error("Error checking user role:", error);
       setIsAdmin(false);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Only stop loading after role check completes
     }
   }, []);
 
   useEffect(() => {
     checkUserRole();
   }, [checkUserRole]);
+
+  useEffect(() => {
+      fetchUserProfile();
+    }, [fetchUserProfile]);
 
   const fetchOrders = useCallback(async () => {
     setIsLoading(true);
@@ -711,7 +735,7 @@ const OrderAdmin = () => {
   }, [fetchOrderStats]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 md:py-10">
+    <div className="min-h-screen bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         {isLoading ? (
           <div className="flex items-center justify-center h-screen">
@@ -756,15 +780,17 @@ const OrderAdmin = () => {
                     </p>
                   </div>
                 </div>
-                <button
+                <CrudButton
+                icon={Plus}
                   onClick={() => {
                     fetchProducts();
                     setShowCreateOrderModal(true);
                   }}
-                  className="flex items-center bg-white hover:bg-gray-100 text-indigo-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
-                >
-                  <Plus size={16} className="mr-1.5" /> Create Order
-                </button>
+                   label="Create Order"
+                   buttonStyle="secondary"
+                  className="flex items-center  text-indigo-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition-colors shadow-sm"
+                />
+                 
               </div>
               <div className="flex flex-col lg:flex-row gap-6">
                 <div className="w-full">
@@ -1040,7 +1066,7 @@ const OrderAdmin = () => {
                                       <span className="mx-2 text-gray-300">
                                         |
                                       </span>
-                                      <span className="text-sm text-gray-600">
+                                      <span className="text-sm text-black font-semibold">
                                         {order.user?.name || order.user_id}
                                       </span>
                                     </div>

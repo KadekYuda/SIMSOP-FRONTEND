@@ -52,15 +52,6 @@ const Order = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderStats, setOrderStats] = useState({
-    totalOrders: 0,
-    pendingOrders: 0,
-    approvedOrders: 0,
-    receivedOrders: 0,
-    cancelledOrders: 0,
-    totalValue: 0,
-    monthlyStats: [],
-  });
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -427,49 +418,6 @@ const Order = () => {
       [field]: option ? option.value : "",
     }));
   };
-
-  useEffect(() => {
-    const pendingCount = orders.filter(
-      (o) => o.order_status === "pending"
-    ).length;
-    const approvedCount = orders.filter(
-      (o) => o.order_status === "approved"
-    ).length;
-    const receivedCount = orders.filter(
-      (o) => o.order_status === "received"
-    ).length;
-    const cancelledCount = orders.filter(
-      (o) => o.order_status === "cancelled"
-    ).length;
-    const totalValue = orders.reduce(
-      (sum, o) => sum + parseFloat(o.total_amount || 0),
-      0
-    );
-    // Monthly stats (6 bulan terakhir)
-    const monthlyStats = [];
-    const now = new Date();
-    for (let i = 5; i >= 0; i--) {
-      const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
-      const monthOrders = orders.filter((order) => {
-        const orderDate = new Date(order.created_at);
-        return orderDate >= month && orderDate <= nextMonth;
-      });
-      monthlyStats.push({
-        date: month.toISOString(),
-        count: monthOrders.length,
-      });
-    }
-    setOrderStats({
-      totalOrders: orders.length,
-      pendingOrders: pendingCount,
-      approvedOrders: approvedCount,
-      receivedOrders: receivedCount,
-      cancelledOrders: cancelledCount,
-      totalValue: totalValue,
-      monthlyStats: monthlyStats,
-    });
-  }, [orders]);
 
   return (
     <>
@@ -1052,7 +1000,7 @@ const Order = () => {
                         </svg>
                       </button>
                     </div>
-                    <OrderCharts orderStats={orderStats} />
+                    <OrderCharts />
                   </div>
                 </div>
               </motion.div>
