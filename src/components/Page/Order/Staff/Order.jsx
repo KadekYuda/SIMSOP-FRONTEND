@@ -53,6 +53,15 @@ const Order = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderStats, setOrderStats] = useState({
+      totalOrders: 0,
+      pendingOrders: 0,
+      approvedOrders: 0,
+      receivedOrders: 0,
+      cancelledOrders: 0,
+      totalValue: 0,
+      monthlyStats: [],
+    });
 
   const fetchUserProfile = useCallback(async () => {
     try {
@@ -419,6 +428,8 @@ const Order = () => {
       [field]: option ? option.value : "",
     }));
   };
+
+  
 
   return (
     <>
@@ -932,7 +943,10 @@ const Order = () => {
               />
             )}
           </AnimatePresence>
-
+             <OrderCharts
+                      orderStats={orderStats}
+                      formatPrice={formatPrice}
+                       />
           <AnimatePresence>
             {alert && (
               <motion.div
@@ -996,7 +1010,6 @@ const Order = () => {
                         </svg>
                       </button>
                     </div>
-                    <OrderCharts />
                   </div>
                 </div>
               </motion.div>

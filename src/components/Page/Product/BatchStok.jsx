@@ -201,10 +201,6 @@ const BatchStok = () => {
     }
   };
 
-  if (loading) {
-    return <LoadingComponent />;
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-6 pt-20">
@@ -791,14 +787,17 @@ const BatchStok = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
+                  {" "}
                   {loading ? (
                     <tr>
-                      <td colSpan="9" className="px-6 py-10 text-center">
-                        <div className="flex flex-col justify-center items-center space-y-2">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                          <span className="text-sm text-gray-500">
-                            Loading inventory data...
-                          </span>
+                      <td colSpan="9" className="p-4">
+                        <div className="flex justify-center items-center py-8">
+                          <div className="flex items-center space-x-4">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                            <p className="text-gray-500 text-sm">
+                              Loading inventory data...
+                            </p>
+                          </div>
                         </div>
                       </td>
                     </tr>
