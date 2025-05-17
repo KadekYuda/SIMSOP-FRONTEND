@@ -761,9 +761,16 @@ const Product = () => {
                   if (loading) {
                     return (
                       <tr>
-                        <td colSpan="8" className="px-4 py-4 text-center">
-                          <LoadingComponent />
-                        </td>
+                        <td colSpan="9" className="p-4">
+                        <div className="flex justify-center items-center py-8">
+                          <div className="flex items-center space-x-4">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                            <p className="text-gray-500 text-sm">
+                              Loading product data...
+                            </p>
+                          </div>
+                        </div>
+                      </td>
                       </tr>
                     );
                   }

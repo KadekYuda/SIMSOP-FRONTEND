@@ -122,6 +122,7 @@ const OrderAdmin = () => {
 
   const checkUserRole = useCallback(async () => {
     try {
+      setIsLoading(true);
       const response = await api.get("/users/profile");
       const userRole = response.data.user?.role;
       setIsAdmin(userRole === "admin");
